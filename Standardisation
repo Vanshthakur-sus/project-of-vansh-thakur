@@ -1,0 +1,43 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+df = pd.read_csv('Social_Network_Ads.csv')
+df.head()
+from sklearn.model_selection import train_test_split
+X_train, X_test, Y_test, Y_train = train_test_split(df.drop('Purchased', axis= 1), df['Purchased'], test_size= 0.3, random_state = 0)
+X_train.shape, X_test.shape
+from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+
+scaler.fit(X_train)  # this will calculate the mean and SD of the data
+
+# These will transform the the data by applying that mathematical formula
+X_train_scaled = scaler.transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+scaler.mean_
+# After running the above test the data we were getting in form of numpy, which was hard to read
+# so the below formula again converted the solution into dataframe
+X_train_scaled = pd.DataFrame(X_train_scaled, columns= X_train.columns)
+X_test_scaled = pd.DataFrame(X_test_scaled, columns = X_test.columns)
+np.round(X_train.describe(), 1)  # this indcates the result before scaling
+X_train_scaled # this indicates the result
+np.round(X_train_scaled.describe(), 1)
+fig, (ax1, ax2) = plt.subplots(ncols=2, figsize=(12,5))
+
+ax1.scatter(X_train['Age'], X_train['EstimatedSalary'])
+ax1.set_title("Before Scaling")
+ax2.scatter(X_train_scaled['Age'], X_train_scaled['EstimatedSalary'], color='green')
+ax2.set_title("After Scaling")
+plt.show()
+fig, (ax1,ax2)= plt.subplots(ncols=2, figsize=(12,5))
+
+ax1.set_title("Before Scaling")
+sns.kdeplot(X_train['Age'], ax=ax1)
+sns.kdeplot(X_train['EstimatedSalary'], ax=ax1)
+
+ax2.set_title("After Scaling")
+sns.kdeplot(X_train_scaled['Age'], ax=ax2)
+sns.kdeplot(X_train_scaled['EstimatedSalary'], ax=ax2)
+plt.show()
